@@ -7,10 +7,12 @@ WebBrowser.maybeCompleteAuthSession();
 
 export function useGoogleAuth() {
   const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: '214548978121-o8cql86qiv3750nqhgh7q5gok5e7ujhj.apps.googleusercontent.com',
-    webClientId: '214548978121-7ohfjg0nqhqafhk27lj4tfonr233pcf3.apps.googleusercontent.com',
-    scopes: ['profile', 'email'],
-  });
+  androidClientId: '214548978121-o8cql86qiv3750nqhgh7q5gok5e7ujhj.apps.googleusercontent.com',
+  webClientId: '214548978121-7ohfjg0nqhqafhk27lj4tfonr233pcf3.apps.googleusercontent.com',
+  scopes: ['profile', 'email'],
+});
+
+
 
   const signInWithGoogle = async () => {
     try {

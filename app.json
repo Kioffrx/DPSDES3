@@ -2,6 +2,7 @@
   "expo": {
     "name": "FinanzasApp",
     "slug": "FinanzasApp",
+    "scheme": "finanzasapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,14 +17,25 @@
       "supportsTablet": true
     },
     "android": {
-  "adaptiveIcon": {
-    "foregroundImage": "./assets/adaptive-icon.png",
-    "backgroundColor": "#ffffff"
-  },
-  
-  "edgeToEdgeEnabled": true,
-  "package": "com.kioff07.finanzasapp"
-},
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.kioff07.finanzasapp",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "com.googleusercontent.apps.214548978121-o8cql86qiv3750nqhgh7q5gok5e7ujhj"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
     "web": {
       "favicon": "./assets/favicon.png"
     },
