@@ -5,6 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import HomeScreen from '../screens/HomeScreen';
+import DashboardScreen from '../screens/DashboardScreen';
+import TransactionsScreen from '../components/TransactionsScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +23,8 @@ function AppStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Dashboard" component={DashboardScreen} />
+      <Stack.Screen name="Transactions" component={TransactionsScreen} />
     </Stack.Navigator>
   );
 }

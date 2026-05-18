@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Alert, StyleSheet, Button } from 'react-native';
-import { agregarTransaccion, obtenerTransacciones, eliminarTransaccion } from '../services/transactionService';
+import { agregarTransaccion, obtenerTransacciones, eliminarTransaccion } from '../service/transactionService';
 
 // Importamos nuestros "ingredientes" independientes
 import FormularioTransaccion from '../components/FormularioTransaccion';

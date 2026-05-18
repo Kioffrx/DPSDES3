@@ -1,29 +1,23 @@
-// src/screens/HomeScreen.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { useTheme } from '../context/ThemeContext';
-
+import { useNavigation } from '@react-navigation/native';
 import { agregarTransaccion, obtenerTransacciones, eliminarTransaccion } from '../service/transactionService';
 import FormularioTransaccion from '../components/FormularioTransaccion';
 import FiltrosTransaccion from '../components/FiltrosTransaccion';
-
-// Importamos el sistema de alertas nativas
 import { registrarParaNotificaciones, enviarAlertaPresupuesto } from '../utils/notifications';
 
 export default function HomeScreen() {
   const { theme, isDark, toggleTheme } = useTheme();
+  const navigation = useNavigation();
   const [transacciones, setTransacciones] = useState([]);
   const [filtrosActuales, setFiltrosActuales] = useState({});
   const [balance, setBalance] = useState(0.00);
 
-  // Inicializar permisos de notificaciones al cargar la pantalla
-  useEffect(() => {
-    registrarParaNotificaciones();
-  }, []);
+  useEffect(() => { registrarParaNotificaciones(); }, []);
 
-  // Calcular el dinero disponible y evaluar alertas de presupuesto
   useEffect(() => {
     let total = 0;
     transacciones.forEach(t => {
@@ -31,14 +25,9 @@ export default function HomeScreen() {
       else total -= t.monto;
     });
     setBalance(total);
-
-    // Disparadores lógicos de notificaciones según los requerimientos
     if (transacciones.length > 0) {
-      if (total < 0.00) {
-        enviarAlertaPresupuesto('DEFICIT');
-      } else if (total < 150.00) {
-        enviarAlertaPresupuesto('BAJO');
-      }
+      if (total < 0.00) enviarAlertaPresupuesto('DEFICIT');
+      else if (total < 150.00) enviarAlertaPresupuesto('BAJO');
     }
   }, [transacciones]);
 
@@ -77,9 +66,9 @@ export default function HomeScreen() {
       "¿Estás seguro de que deseas borrar permanentemente este registro?",
       [
         { text: "Cancelar", style: "cancel" },
-        { 
-          text: "Sí, eliminar", 
-          style: "destructive", 
+        {
+          text: "Sí, eliminar",
+          style: "destructive",
           onPress: async () => {
             try {
               await eliminarTransaccion(id);
@@ -87,7 +76,7 @@ export default function HomeScreen() {
             } catch (e) {
               Alert.alert("Error", "No se pudo eliminar.");
             }
-          } 
+          }
         }
       ]
     );
@@ -99,18 +88,23 @@ export default function HomeScreen() {
         data={transacciones}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.scrollContainer}
-        
         ListHeaderComponent={(
           <View style={styles.headerSection}>
             <Text style={[styles.title, { color: theme.text }]}>Mi Billetera</Text>
-            
-            {/* CARD DE DINERO DISPONIBLE (Color azul de componentes generales) */}
+
             <View style={styles.balanceCard}>
               <Text style={styles.balanceLabel}>DINERO DISPONIBLE</Text>
               <Text style={styles.balanceMonto}>${balance.toFixed(2)}</Text>
             </View>
 
-            {/* Ajustes de Tema */}
+            {/* Botón Dashboard */}
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: '#4f46e5', marginBottom: 10 }]}
+              onPress={() => navigation.navigate('Dashboard')}
+            >
+              <Text style={styles.buttonText}>Ver Dashboard</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity style={[styles.themeButton, { borderColor: '#2563eb' }]} onPress={toggleTheme}>
               <Text style={[styles.themeButtonText, { color: '#2563eb' }]}>
                 {isDark ? 'Modo claro' : 'Modo oscuro'}
@@ -122,11 +116,10 @@ export default function HomeScreen() {
 
             <Text style={[styles.sectionTitle, { color: theme.text }]}>Filtrar Movimientos</Text>
             <FiltrosTransaccion onCambiarFiltro={manejarCambioFiltro} />
-            
+
             <Text style={[styles.sectionTitle, { color: theme.text, marginTop: 10 }]}>Historial de Operaciones</Text>
           </View>
         )}
-
         renderItem={({ item }) => (
           <View style={[styles.itemCard, { backgroundColor: isDark ? '#1e1b4b' : '#f8fafc', borderColor: theme.border }]}>
             <View>
@@ -143,7 +136,6 @@ export default function HomeScreen() {
             </View>
           </View>
         )}
-
         ListFooterComponent={(
           <View style={styles.footerSection}>
             <TouchableOpacity style={[styles.button, { backgroundColor: theme.danger }]} onPress={handleLogout}>
@@ -162,18 +154,14 @@ const styles = StyleSheet.create({
   headerSection: { alignItems: 'center', width: '100%' },
   footerSection: { alignItems: 'center', marginTop: 32, marginBottom: 20 },
   title: { fontSize: 26, fontWeight: 'bold', marginBottom: 15 },
-  
-  // Diseño de la tarjeta superior de balance
   balanceCard: { backgroundColor: '#2563eb', width: '100%', padding: 20, borderRadius: 12, alignItems: 'center', marginBottom: 15, elevation: 3 },
   balanceLabel: { color: '#bfdbfe', fontSize: 13, fontWeight: '700', letterSpacing: 1 },
   balanceMonto: { color: '#fff', fontSize: 36, fontWeight: 'bold', marginTop: 5 },
-  
   sectionTitle: { fontSize: 18, fontWeight: 'bold', alignSelf: 'flex-start', marginBottom: 10, marginTop: 15 },
   themeButton: { borderWidth: 1, borderRadius: 8, padding: 10, paddingHorizontal: 20, marginBottom: 16 },
   themeButtonText: { fontSize: 14, fontWeight: '600' },
   button: { borderRadius: 8, padding: 16, width: '100%', alignItems: 'center' },
   buttonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
-  
   itemCard: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 14, borderRadius: 8, marginBottom: 10, borderWidth: 1 },
   itemDesc: { fontSize: 16, fontWeight: '600' },
   itemSub: { fontSize: 13, marginTop: 2 },
