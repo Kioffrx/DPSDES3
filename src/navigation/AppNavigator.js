@@ -7,6 +7,8 @@ import RegisterScreen from '../screens/RegisterScreen';
 import HomeScreen from '../screens/HomeScreen';
 import DashboardScreen from '../screens/DashboardScreen';
 import TransactionsScreen from '../components/TransactionsScreen';
+import AccountsScreen from '../screens/AccountsScreen';
+import AddAccountScreen from '../screens/AddAccountScreen';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +27,8 @@ function AppStack() {
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Dashboard" component={DashboardScreen} />
       <Stack.Screen name="Transactions" component={TransactionsScreen} />
+      <Stack.Screen name="Accounts" component={AccountsScreen} />
+      <Stack.Screen name="AddAccount" component={AddAccountScreen} />
     </Stack.Navigator>
   );
 }

@@ -46,14 +46,46 @@ export default function HomeScreen() {
 
   useEffect(() => { cargarTransacciones(); }, []);
 
-  const manejarAgregarTransaccion = async (nueva) => {
+  /*const manejarAgregarTransaccion = async (nueva) => {
     try {
       await agregarTransaccion(nueva.monto, nueva.tipo, nueva.categoria, nueva.cuenta, nueva.fecha, nueva.descripcion);
       cargarTransacciones(filtrosActuales);
     } catch (error) {
       Alert.alert("Error", "No se pudo guardar en la base de datos.");
     }
-  };
+  };*/
+
+  const manejarAgregarTransaccion = async (nueva) => {
+
+  try {
+
+    await agregarTransaccion(
+
+      nueva.monto,
+
+      nueva.tipo,
+
+      nueva.categoria,
+
+      nueva.cuenta,
+
+      nueva.accountId,
+
+      nueva.fecha,
+
+      nueva.descripcion
+    );
+
+    cargarTransacciones(filtrosActuales);
+
+  } catch (error) {
+
+    Alert.alert(
+      "Error",
+      "No se pudo guardar en la base de datos."
+    );
+  }
+};
 
   const manejarCambioFiltro = (nuevoFiltro) => {
     setFiltrosActuales(nuevoFiltro);
@@ -108,6 +140,22 @@ export default function HomeScreen() {
             <TouchableOpacity style={[styles.themeButton, { borderColor: '#2563eb' }]} onPress={toggleTheme}>
               <Text style={[styles.themeButtonText, { color: '#2563eb' }]}>
                 {isDark ? 'Modo claro' : 'Modo oscuro'}
+              </Text>
+            </TouchableOpacity>
+
+            {/* Botón Cuentas */}
+            <TouchableOpacity
+              style={[
+                styles.button,
+                {
+                  backgroundColor: '#003B70',
+                  marginBottom: 10
+                }
+              ]}
+              onPress={() => navigation.navigate('Accounts')}
+            >
+              <Text style={styles.buttonText}>
+                Ver Mis Cuentas
               </Text>
             </TouchableOpacity>
 
