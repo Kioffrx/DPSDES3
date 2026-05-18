@@ -22,7 +22,7 @@ export function suscribirTransaccionesMes(uid, callback) {
 export function suscribirCuentas(uid, callback) {
   const q = query(
     collection(db, 'transacciones'),
-    where('uidUsuario', '==', uid)
+    where('uidUsuario', '==', uid),
   );
   return onSnapshot(q, (snapshot) => {
     const cuentas = [...new Set(snapshot.docs.map(doc => doc.data().cuenta))];
