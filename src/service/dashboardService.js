@@ -1,15 +1,16 @@
-import { collection, query, where, onSnapshot, Timestamp } from 'firebase/firestore';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
 export function suscribirTransaccionesMes(uid, callback) {
   const ahora = new Date();
-  const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
-  const finMes = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0, 23, 59, 59);
+  const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1).toISOString().split('T')[0];
+  const finMes = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0).toISOString().split('T')[0];
 
   const q = query(
-    collection(db, 'users', uid, 'transactions'),
-    where('fecha', '>=', Timestamp.fromDate(inicioMes)),
-    where('fecha', '<=', Timestamp.fromDate(finMes))
+    collection(db, 'transacciones'),
+    where('uidUsuario', '==', uid),
+    where('fecha', '>=', inicioMes),
+    where('fecha', '<=', finMes)
   );
 
   return onSnapshot(q, (snapshot) => {
@@ -19,9 +20,13 @@ export function suscribirTransaccionesMes(uid, callback) {
 }
 
 export function suscribirCuentas(uid, callback) {
-  const q = collection(db, 'users', uid, 'accounts');
+  const q = query(
+    collection(db, 'transacciones'),
+    where('uidUsuario', '==', uid)
+  );
   return onSnapshot(q, (snapshot) => {
-    const cuentas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    callback(cuentas);
+    const cuentas = [...new Set(snapshot.docs.map(doc => doc.data().cuenta))];
+    const cuentasObj = cuentas.map(nombre => ({ nombre }));
+    callback(cuentasObj);
   });
 }
